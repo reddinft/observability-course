@@ -1,0 +1,28 @@
+id: "module-10-production::quiz"
+title: "Module 10 Quiz"
+passing_score: 70
+questions:
+  - id: "q1_module-10-production"
+    text: "Question 1?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option A"
+  - id: "q2_module-10-production"
+    text: "Question 2?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option B"
+  - id: "q3_module-10-production"
+    text: "Question 3?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option C"

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Observability Engineering Course{% endblock %}</title>
+    
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    
+    <!-- Highlight.js for syntax highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/typescript.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/yaml.min.js"></script>
+    
+    <!-- Mermaid for diagrams -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    
+    <!-- HTMX for interactivity -->
+    <script src="https://unpkg.com/htmx.org@1.9.10"></script>
+    
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1><a href="/">📊 Observability</a></h1>
+            </div>
+            
+            <nav class="sidebar-nav">
+                {% for module in all_modules %}
+                <div class="nav-module">
+                    <a href="/module/{{ module.id }}" class="nav-module-title">
+                        Module {{ module.order }}: {{ module.title }}
+                    </a>
+                    <div class="progress-mini">
+                        <div class="progress-bar-small" style="width: {{ module.progress_pct }}%"></div>
+                    </div>
+                    <span class="progress-text">{{ module.progress_done }}/{{ module.progress_total }}</span>
+                </div>
+                {% endfor %}
+            </nav>
+        </aside>
+        
+        <!-- Main content -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', path='app.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Highlight code blocks
+            document.querySelectorAll('pre code').forEach(block => {
+                hljs.highlightElement(block);
+            });
+            
+            // Initialize mermaid diagrams
+            mermaid.contentLoaded();
+            
+            // HTMX configuration
+            htmx.config.timeout = 10000;
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

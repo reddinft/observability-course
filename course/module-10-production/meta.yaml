@@ -1,0 +1,13 @@
+title: "Module 10 — Production Readiness & Best Practices"
+description: "Retention, multi-environment, alerting, maturity model."
+order: 10
+lessons:
+  - slug: lesson-01
+    title: "Introduction"
+    estimated_minutes: 8
+  - slug: lesson-02
+    title: "Core Concepts"
+    estimated_minutes: 10
+  - slug: lesson-03
+    title: "Practical Exercise"
+    estimated_minutes: 12

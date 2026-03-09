@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Quiz — Module {{ module.order }}: {{ module.title }}{% endblock %}
+
+{% block content %}
+<div class="quiz-header">
+    <h1>📝 Module {{ module.order }} Quiz</h1>
+    <p>{{ module.title }}</p>
+</div>
+
+{% if submitted and results %}
+<!-- Quiz Results -->
+<div class="quiz-results">
+    <div class="results-header {% if passing %}passed{% else %}failed{% endif %}">
+        <h2>{% if passing %}🎉 Passed!{% else %}Try Again{% endif %}</h2>
+        <p class="score">{{ correct }} / {{ total }} correct ({{ score_pct }}%)</p>
+        {% if best and best.score != correct %}
+        <p class="best-score">Your best score: {{ best.score }} / {{ total }} ({{ int((best.score / total) * 100) }}%)</p>
+        {% endif %}
+    </div>
+    
+    <div class="results-list">
+        {% for result in results %}
+        <div class="result-item {% if result.is_correct %}correct{% else %}incorrect{% endif %}">
+            <div class="result-question">
+                <h3>{{ result.question.text }}</h3>
+                <div class="result-answer">
+                    <p><strong>Your answer:</strong> {{ result.user_answer }}</p>
+                    {% if not result.is_correct %}
+                    <p><strong>Correct answer:</strong> {{ result.question.correct }}</p>
+                    {% endif %}
+                </div>
+                <div class="result-icon">
+                    {% if result.is_correct %}✓{% else %}✗{% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="quiz-actions">
+        <form method="post" action="/module/{{ module_id }}/quiz">
+            <button type="submit" class="btn btn-primary">Retake Quiz</button>
+        </form>
+        <a href="/module/{{ module_id }}" class="btn btn-outline">Back to Module</a>
+    </div>
+</div>
+
+{% else %}
+<!-- Quiz Form -->
+<form method="post" action="/module/{{ module_id }}/quiz" class="quiz-form">
+    <div class="quiz-instructions">
+        <p>Answer all questions. You need {{ quiz.get('passing_score', 70) }}% to pass.</p>
+    </div>
+    
+    <div class="questions-list">
+        {% for question in quiz.questions %}
+        <div class="question-item">
+            <h3>{{ loop.index }}. {{ question.text }}</h3>
+            
+            <div class="options">
+                {% for option in question.options %}
+                <label class="option-label">
+                    <input 
+                        type="radio" 
+                        name="{{ question.id }}" 
+                        value="{{ option }}"
+                        required
+                    >
+                    {{ option }}
+                </label>
+                {% endfor %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="quiz-actions">
+        <button type="submit" class="btn btn-primary">Submit Quiz</button>
+        <a href="/module/{{ module_id }}" class="btn btn-outline">Cancel</a>
+    </div>
+</form>
+{% endif %}
+{% endblock %}

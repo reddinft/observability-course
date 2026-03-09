@@ -1,0 +1,28 @@
+id: "module-09-synthetic-datasets::quiz"
+title: "Module 09 Quiz"
+passing_score: 70
+questions:
+  - id: "q1_module-09-synthetic-datasets"
+    text: "Question 1?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option A"
+  - id: "q2_module-09-synthetic-datasets"
+    text: "Question 2?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option B"
+  - id: "q3_module-09-synthetic-datasets"
+    text: "Question 3?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option C"

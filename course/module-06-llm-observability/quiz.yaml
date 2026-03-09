@@ -1,0 +1,28 @@
+id: "module-06-llm-observability::quiz"
+title: "Module 06 Quiz"
+passing_score: 70
+questions:
+  - id: "q1_module-06-llm-observability"
+    text: "Question 1?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option A"
+  - id: "q2_module-06-llm-observability"
+    text: "Question 2?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option B"
+  - id: "q3_module-06-llm-observability"
+    text: "Question 3?"
+    options:
+      - "Option A"
+      - "Option B"
+      - "Option C"
+      - "Option D"
+    correct: "Option C"

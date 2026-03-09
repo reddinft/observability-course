@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Module {{ module.order }}: {{ module.title }}{% endblock %}
+
+{% block content %}
+<div class="module-header">
+    <h1>Module {{ module.order }}: {{ module.title }}</h1>
+    <p class="module-description">{{ module.description }}</p>
+    
+    <div class="progress-section">
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: {{ pct }}%"></div>
+        </div>
+        <p class="progress-label">{{ done }} / {{ total }} lessons completed ({{ pct }}%)</p>
+    </div>
+</div>
+
+<div class="module-content">
+    <h2>Lessons</h2>
+    <div class="lessons-list">
+        {% for lesson in lessons %}
+        <div class="lesson-item {% if lesson.completed %}completed{% endif %}">
+            <div class="lesson-item-header">
+                <a href="/module/{{ module.id }}/lesson/{{ lesson.slug }}" class="lesson-title">
+                    {{ lesson.title }}
+                </a>
+                <div class="lesson-meta">
+                    <span class="lesson-time">{{ lesson.estimated_minutes }} min</span>
+                    {% if lesson.completed %}
+                    <span class="badge-success">✓ Done</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="module-actions">
+        <a href="/module/{{ module.id }}/quiz" class="btn btn-primary">📝 Take Quiz</a>
+        <a href="/" class="btn btn-outline">← Back to Home</a>
+    </div>
+</div>
+{% endblock %}

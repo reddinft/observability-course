@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Observability Engineering Course — Start Here{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1>🔭 Observability Engineering</h1>
+    <p class="subtitle">A hands-on course on logs, metrics, traces, and production monitoring.</p>
+    
+    <div class="progress-section">
+        <h2>Your Progress</h2>
+        <div class="progress-box">
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: {{ overall_pct }}%"></div>
+            </div>
+            <p class="progress-label">{{ total_done }} / {{ total_lessons }} lessons completed ({{ overall_pct }}%)</p>
+        </div>
+    </div>
+</div>
+
+<div class="modules-grid">
+    {% for module in modules %}
+    <div class="module-card">
+        <div class="module-card-header">
+            <h3>Module {{ module.order }}</h3>
+            <span class="progress-badge">{{ module.progress_done }}/{{ module.progress_total }}</span>
+        </div>
+        <h2><a href="/module/{{ module.id }}">{{ module.title }}</a></h2>
+        <p>{{ module.description }}</p>
+        
+        <div class="progress-mini">
+            <div class="progress-bar-small" style="width: {{ module.progress_pct }}%"></div>
+        </div>
+        
+        <div class="module-lessons">
+            <ul>
+                {% for lesson in module.lessons %}
+                <li>
+                    <a href="/module/{{ module.id }}/lesson/{{ lesson.slug }}">
+                        {{ lesson.title }}
+                    </a>
+                    <span class="lesson-time">{{ lesson.estimated_minutes }} min</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <div class="module-actions">
+            <a href="/module/{{ module.id }}" class="btn btn-outline">View Module</a>
+            <a href="/module/{{ module.id }}/quiz" class="btn btn-outline">Take Quiz</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

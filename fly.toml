@@ -1,0 +1,36 @@
+# Fly.io configuration for observability-course
+
+app = "observability-course"
+primary_region = "syd"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  DB_PATH = "/data/progress.db"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 1
+
+[http_service.checks]
+  [http_service.checks.status]
+    port = 8080
+    type = "http"
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/health"
+
+[mounts]
+  source = "observability_data"
+  destination = "/data"
+
+[[mounts]]
+  source = "observability_data"
+  destination = "/data"
+  size_gb = 1

@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block title %}{{ lesson.title }} — Module {{ module.order }}{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/markdown-it@13/dist/markdown-it.min.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="lesson-header">
+    <div class="breadcrumb">
+        <a href="/">Home</a> / <a href="/module/{{ module_id }}">Module {{ module.order }}</a> / {{ lesson.title }}
+    </div>
+    <h1>{{ lesson.title }}</h1>
+    <p class="lesson-meta">
+        📖 Estimated reading time: {{ lesson.estimated_minutes }} minutes
+    </p>
+</div>
+
+<div class="lesson-content">
+    <div id="lesson-body" class="markdown-body">
+        {{ content | safe }}
+    </div>
+    
+    <div id="progress-btn-wrap" class="progress-section">
+        {% if is_completed %}
+        <form hx-post="/progress/toggle" hx-target="#progress-btn-wrap" hx-swap="outerHTML">
+            <input type="hidden" name="lesson_id" value="{{ lesson_id }}">
+            <input type="hidden" name="module_id" value="{{ module_id }}">
+            <input type="hidden" name="lesson_slug" value="{{ lesson.slug }}">
+            <input type="hidden" name="currently_completed" value="1">
+            <button type="submit" class="btn btn-success">✅ Completed</button>
+        </form>
+        {% else %}
+        <form hx-post="/progress/toggle" hx-target="#progress-btn-wrap" hx-swap="outerHTML">
+            <input type="hidden" name="lesson_id" value="{{ lesson_id }}">
+            <input type="hidden" name="module_id" value="{{ module_id }}">
+            <input type="hidden" name="lesson_slug" value="{{ lesson.slug }}">
+            <input type="hidden" name="currently_completed" value="0">
+            <button type="submit" class="btn btn-outline">Mark Complete</button>
+        </form>
+        {% endif %}
+    </div>
+    
+    <div class="lesson-nav">
+        <a href="/module/{{ module_id }}" class="btn btn-outline">← Back to Module</a>
+        <a href="/module/{{ module_id }}/quiz" class="btn btn-outline">Take Quiz →</a>
+    </div>
+</div>
+
+<script>
+// Convert markdown to HTML
+const md = window.markdownit('commonmark', {
+    highlight: function(str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return '<pre class="hljs"><code>' + hljs.highlight(str, { language: lang, ignoreIllegals: true }).value + '</code></pre>';
+            } catch (__) {}
+        }
+        return '<pre class="hljs"><code>' + md.utils.escapeHtml(str) + '</code></pre>';
+    }
+});
+
+const body = document.getElementById('lesson-body');
+body.innerHTML = md.render(body.textContent);
+</script>
+{% endblock %}

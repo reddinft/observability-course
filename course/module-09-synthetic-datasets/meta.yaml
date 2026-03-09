@@ -1,0 +1,13 @@
+title: "Module 09 — Synthetic Datasets: Generation & Usage"
+description: "Why synthetic data matters and how to generate it."
+order: 09
+lessons:
+  - slug: lesson-01
+    title: "Introduction"
+    estimated_minutes: 8
+  - slug: lesson-02
+    title: "Core Concepts"
+    estimated_minutes: 10
+  - slug: lesson-03
+    title: "Practical Exercise"
+    estimated_minutes: 12
