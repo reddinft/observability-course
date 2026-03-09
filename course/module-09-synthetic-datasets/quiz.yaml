@@ -1,28 +1,30 @@
-id: "module-09-synthetic-datasets::quiz"
-title: "Module 09 Quiz"
-passing_score: 70
 questions:
-  - id: "q1_module-09-synthetic-datasets"
-    text: "Question 1?"
+  - id: q1
+    text: "Why does generate_traces.py use a log-normal distribution for latency values instead of uniform random?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option A"
-  - id: "q2_module-09-synthetic-datasets"
-    text: "Question 2?"
+      - "Log-normal is simpler to implement than uniform distribution"
+      - "Log-normal matches real production latency patterns: always positive, long right tail for p99 spikes, matches observed distributions"
+      - "Uniform distribution would generate negative latencies which are invalid"
+      - "Log-normal is required by the Langfuse ingestion API schema"
+    answer: 1
+    explanation: "Log-normal distributions are the right model for latency because they're always positive (no negative values), have a long right tail that matches real p99 spike behaviour, and empirically match what engineers observe in production systems. Uniform distribution would produce a flat, unrealistic pattern where p99 is only slightly higher than p50 — the opposite of reality."
+
+  - id: q2
+    text: "You export 1,000 traces from a production Langfuse instance to share with students. Before sharing, you run redact_traces.py with --dry-run --report. It shows 47 values redacted across 3 pattern types. What should you do next?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option B"
-  - id: "q3_module-09-synthetic-datasets"
-    text: "Question 3?"
+      - "Share the original file — 47 redactions out of 1,000 traces is negligible"
+      - "Review the report breakdown, confirm the patterns caught are correct, then run without --dry-run to produce the clean output file"
+      - "The dry run already produced the clean file — it's ready to share"
+      - "Increase the --count flag to reduce the redaction percentage"
+    answer: 1
+    explanation: "The --dry-run flag validates without writing output. After reviewing the report to confirm the detected patterns are correct (no false positives, no missed patterns), you run again without --dry-run to actually produce the sanitised file. Sharing the original with 47 un-redacted sensitive values would be a data leak."
+
+  - id: q3
+    text: "seed_langfuse.py receives a 429 response on the third batch. What does it do?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option C"
+      - "Stops ingestion immediately and reports the error"
+      - "Retries the same batch with exponential backoff (waits 1s, then 2s, then 4s for up to 3 attempts)"
+      - "Skips that batch and continues with the next one"
+      - "Switches to a different Langfuse endpoint to bypass the rate limit"
+    answer: 1
+    explanation: "429 (Too Many Requests) triggers exponential backoff retry logic: wait 2^0=1s, 2^1=2s, 2^2=4s across up to 3 attempts. This is the correct pattern for rate-limited APIs — it gives the server time to recover without hammering it further. After 3 failed retries, the batch is marked as failed and the script continues (or stops, depending on --strict mode)."
