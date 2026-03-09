@@ -30,7 +30,7 @@ def load_modules() -> list[dict]:
         meta["id"] = module_dir.name
         modules.append(meta)
     
-    return sorted(modules, key=lambda m: m.get("order", 999))
+    return sorted(modules, key=lambda m: int(m.get("order", 999)))
 
 
 def load_module(module_id: str) -> Optional[dict]:

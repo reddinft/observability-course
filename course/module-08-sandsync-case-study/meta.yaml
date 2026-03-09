@@ -1,6 +1,6 @@
 title: "Module 08 — Langfuse in Production: SandSync Case Study"
 description: "Real-world multi-agent instrumentation."
-order: 08
+order: 8
 lessons:
   - slug: lesson-01
     title: "Introduction"
