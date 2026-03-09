@@ -1,28 +1,30 @@
-id: "module-07-langfuse-deep-dive::quiz"
-title: "Module 07 Quiz"
-passing_score: 70
 questions:
-  - id: "q1_module-07-langfuse-deep-dive"
-    text: "Question 1?"
+  - id: q1
+    text: "In Langfuse's data model, what is a 'Generation' compared to a regular 'Span'?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option A"
-  - id: "q2_module-07-langfuse-deep-dive"
-    text: "Question 2?"
+      - "A generation is identical to a span — just a naming convention"
+      - "A generation is a special span type with LLM-specific fields: model, input/output, token usage, and cost"
+      - "A generation represents a complete user request, while a span is a sub-operation"
+      - "Generations are only available in the Cloud version of Langfuse"
+    answer: 1
+    explanation: "Generations extend spans with LLM-specific fields including model name, prompt input, completion output, token usage (inputTokens, outputTokens), and cost tracking. This is what makes Langfuse different from general-purpose tracing tools."
+
+  - id: q2
+    text: "You're running SandSync in production on Fly.io. Which approach correctly configures Langfuse for local dev vs production without changing code?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option B"
-  - id: "q3_module-07-langfuse-deep-dive"
-    text: "Question 3?"
+      - "Use two different Langfuse SDK instances, one per environment"
+      - "Set LANGFUSE_BASE_URL as an environment variable: localhost:3100 locally, cloud.langfuse.com in production"
+      - "Comment out the self-hosted config and uncomment the cloud config before deploying"
+      - "Langfuse Cloud and self-hosted use different SDKs, so you must swap the import"
+    answer: 1
+    explanation: "Setting LANGFUSE_BASE_URL as an env var is the correct approach. The SDK reads this at runtime — same code, different config. SandSync uses this exact pattern: .env.local points to localhost:3100 (self-hosted Docker), while Fly.io secrets point to cloud.langfuse.com."
+
+  - id: q3
+    text: "What happens to buffered Langfuse events if you forget to call flushAsync() before a serverless function exits?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option C"
+      - "They are automatically flushed by the SDK's background worker"
+      - "They are queued in Langfuse's cloud buffer and delivered within 60 seconds"
+      - "Events in the current batch window (up to 5 seconds) are lost — never delivered"
+      - "The SDK throws an error reminding you to flush"
+    answer: 2
+    explanation: "The Langfuse SDK buffers events in memory and flushes on a schedule (default every 5 seconds). If your process exits before the flush, buffered events are lost. Always call await langfuse.flushAsync() after each operation in short-lived contexts (serverless, scripts), and await langfuse.shutdownAsync() in long-running servers on SIGTERM."

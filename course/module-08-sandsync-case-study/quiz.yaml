@@ -1,28 +1,30 @@
-id: "module-08-sandsync-case-study::quiz"
-title: "Module 08 Quiz"
-passing_score: 70
 questions:
-  - id: "q1_module-08-sandsync-case-study"
-    text: "Question 1?"
+  - id: q1
+    text: "SandSync's trace waterfall showed Ogma and fal.ai running sequentially after Anansi. What type of problem is this, and how would you fix it?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option A"
-  - id: "q2_module-08-sandsync-case-study"
-    text: "Question 2?"
+      - "A network problem — fix by choosing a closer Fly.io region"
+      - "A code architecture problem — fix by running Ogma review and fal.ai image generation in parallel after Anansi completes"
+      - "An API rate limit problem — fix by adding retry logic to both services"
+      - "A database problem — fix by adding an index to the story_chapters table"
+    answer: 1
+    explanation: "Sequential execution of two independent operations is a code architecture problem. Ogma review and fal.ai image generation don't depend on each other — they both only need Anansi's draft. Running them with Promise.all() would reduce total chapter generation time from ~8.4s to ~5.5s. Traces make this visible; metrics would only show 'pipeline is slow'."
+
+  - id: q2
+    text: "Ogma's latency was bimodal: sometimes 2s, sometimes 8s. The root cause turned out to be provider fallback. What instrumentation change revealed this?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option B"
-  - id: "q3_module-08-sandsync-case-study"
-    text: "Question 3?"
+      - "Adding Prometheus metrics for each provider's response time"
+      - "Adding the `ogma.provider` attribute to each Ogma span, allowing filtering by resolved provider in Langfuse"
+      - "Enabling debug logging in the Groq SDK"
+      - "Adding a health check that pings Groq and Anthropic every 30 seconds"
+    answer: 1
+    explanation: "Adding span.setAttribute('ogma.provider', OGMA_PROVIDER) to each Ogma span made it possible to filter traces by provider in Langfuse. This revealed that Groq calls were consistently fast (p50: 1.8s) while Anthropic fallback calls were slow (p50: 6.8s), and that 17% of calls were hitting the Anthropic fallback because GROQ_API_KEY wasn't set in staging."
+
+  - id: q3
+    text: "Langfuse's token distribution showed Anansi had an input/output ratio of 1.8:1, unusually high for a creative writing task. What did this reveal?"
     options:
-      - "Option A"
-      - "Option B"
-      - "Option C"
-      - "Option D"
-    correct: "Option C"
+      - "Claude Haiku was being inefficient with its context window"
+      - "The story context was growing too large across chapters, exceeding the expected length"
+      - "A 450-token stale system prompt with redundant instructions was bloating every Anansi call by ~36%"
+      - "The tokeniser was double-counting tokens in the Langfuse SDK"
+    answer: 2
+    explanation: "Examining the actual input token distribution in Langfuse revealed that Anansi's 1,247 average input tokens included a 450-token system prompt copied from an earlier prototype and never trimmed. It contained redundant formatting instructions and a static character list. Trimming it would reduce Anansi's input cost by ~36% with no quality impact — a finding that only token-level observability surfaces."
